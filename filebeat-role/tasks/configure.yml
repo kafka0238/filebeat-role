@@ -7,3 +7,20 @@
     dest: /etc/filebeat/filebeat.yml
   notify: restart Filebeat
   tags: filebeat
+- name: Set Filebeat systemwork
+  become: true
+  command:
+    cmd: filebeat modules enable system
+    chdir: /usr/share/filebeat/bin
+  register: filebeat_modules
+  changed_when: filebeat_modules.stdout != 'Module system is already enabled'
+  tags: filebeat
+- name: Load Kibana dashboard
+  become: true
+  command:
+    cmd: filebeat setup
+    chdir: /usr/share/filebeat/bin
+  register: filebeat_setup
+  changed_when: false
+  until: filebeat_setup is succeeded
+  tags: filebeat
