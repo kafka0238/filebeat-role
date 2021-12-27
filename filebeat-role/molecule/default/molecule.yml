@@ -7,24 +7,50 @@ platforms:
   - name: elastic_ubuntu
     image: docker.io/pycontribs/ubuntu:latest
     pre_build_image: true
+    privileged: True
     groups:
       - elasticsearch
+    networks:
+      - name: elk
   - name: kibana_ubuntu
     image: docker.io/pycontribs/ubuntu:latest
     pre_build_image: true
-    groups:
-      - kibana
-  - name: filebeat_ubuntu
-    image: docker.io/pycontribs/ubuntu:latest
-    pre_build_image: true
+    privileged: True
+    networks:
+      - name: elk
     groups:
       - kibana
   - name: filebeat_centos7
     image: docker.io/pycontribs/centos:7
     pre_build_image: true
+    command: /sbin/init
+    privileged: True
+    networks:
+      - name: elk
+    groups:
+      - filebeat
+  - name: filebeat_ubuntu
+    image: docker.io/pycontribs/ubuntu:latest
+    pre_build_image: true
+    privileged: True
+    networks:
+      - name: elk
     groups:
       - filebeat
 provisioner:
   name: ansible
+  inventory:
+    group_vars:
+      kibana:
+        default_elastic_host: elastic_ubuntu
+      filebeat:
+        default_elastic_host: elastic_ubuntu
+        default_kibana_host: kibana_ubuntu
 verifier:
   name: ansible
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - converge
+#    - verify

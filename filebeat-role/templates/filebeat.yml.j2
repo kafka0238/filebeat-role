@@ -1,11 +1,11 @@
 output.elasticsearch:
     hosts: [
 {% for host in groups['elasticsearch'] %}
-        "http://{{ hostvars[host]['ansible_facts']['default_ipv4']['address'] }}:9200",
+        "http://{{ hostvars[host]['ansible_facts']['default_ipv4']['address'] | default(default_elastic_host) }}:9200",
 {% endfor %}
     ]
 setup.kibana:
 {% for host in groups['kibana'] %}
-    host: "http://{{ hostvars[host]['ansible_facts']['default_ipv4']['address'] }}:5601"
+    host: "http://{{ hostvars[host]['ansible_facts']['default_ipv4']['address'] | default(default_kibana_host) }}:5601"
 {% endfor %}
 filebeat.config.modules.path: ${path.config}/modules.d/*.yml

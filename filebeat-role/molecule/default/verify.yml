@@ -2,13 +2,13 @@
 # This is an example playbook to execute Ansible tests.
 
 - name: Verify
-  hosts: kibana
+  hosts: filebeat
   gather_facts: false
   tasks:
-  - name: Request to kibana
-    command:
-      cmd: curl http://localhost:5044
-    register: response
-  - name: Status verify
+  - name: "Filebeat test output"
+    become: true
+    command: /usr/bin/filebeat test output
+    register: test_output_result
+  - name: Filebeat test output success
     assert:
-      that: response.status == 200
+      that: "'talk to server... OK' in test_output_result.stdout"

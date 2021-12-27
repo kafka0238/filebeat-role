@@ -1,3 +1,5 @@
 ---
 filebeat_version: "7.14.0"
 filebeat_install_type: remote
+default_elastic_host: '0.0.0.0'
+default_kibana_host: '0.0.0.0'
