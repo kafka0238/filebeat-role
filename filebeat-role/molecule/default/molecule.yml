@@ -48,9 +48,9 @@ provisioner:
         default_kibana_host: kibana_ubuntu
 verifier:
   name: ansible
-scenario:
-  test_sequence:
-    - destroy
-    - create
-    - converge
+#scenario:
+#  test_sequence:
+#    - destroy
+#    - create
+#    - converge
 #    - verify
